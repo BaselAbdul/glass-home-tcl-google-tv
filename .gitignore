@@ -1,0 +1,11 @@
+# Generated per computer / per TV - never commit
+toolchain/
+logs/
+backup/
+recordings/
+home-launcher/build/
+scripts/.tv_target
+scripts/99_restore_all.sh
+*.jks
+*.pass
+.DS_Store
