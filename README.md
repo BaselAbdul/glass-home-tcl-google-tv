@@ -1,6 +1,6 @@
 # Glass Home for TCL Google TV
 
-**by Basel Majid** · version 1.0 · MIT License
+**by Basel Majid** · version 1.0.1 · MIT License
 
 A complete makeover for TCL Google TVs: a clean, fast, premium **liquid-glass home screen**, plus a
 careful, fully reversible clean-up of the bloatware TCL ships with the TV. No rooting, no firmware
@@ -42,7 +42,7 @@ YouTube, HBO Max in HD/4K), Bluetooth, the remote, AirPlay (unless you choose to
    bash scripts/01_connect_and_audit.sh <TV-IP:PORT>
    bash scripts/02_backup_and_benchmark.sh baseline
    bash scripts/03_debloat.sh
-   bash scripts/05_build_and_install_home.sh --prebuilt apk/GlassHome-1.0.apk
+   bash scripts/05_build_and_install_home.sh --prebuilt apk/GlassHome-1.0.1.apk
    ```
 4. Press **Home** on your remote.
 
@@ -59,7 +59,7 @@ YouTube, HBO Max in HD/4K), Bluetooth, the remote, AirPlay (unless you choose to
    bash scripts/01_connect_and_audit.sh <TV-IP:PORT>
    bash scripts/02_backup_and_benchmark.sh baseline
    bash scripts/03_debloat.sh
-   bash scripts/05_build_and_install_home.sh --prebuilt apk/GlassHome-1.0.apk
+   bash scripts/05_build_and_install_home.sh --prebuilt apk/GlassHome-1.0.1.apk
    ```
 4. Press **Home** on your remote.
 

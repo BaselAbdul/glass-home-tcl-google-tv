@@ -15,7 +15,7 @@ export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL="*"   # stop Git Bash rewriting /s
 hostpath(){ if command -v cygpath >/dev/null 2>&1; then cygpath -w "$1"; else printf '%s' "$1"; fi; }
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="${HOME_SRC:-$DIR/home-launcher}"; TC="$DIR/toolchain"; OUT="${HOME_OUT:-$SRC/build}"; LOGD="$DIR/logs"
-VERSION_CODE=10; VERSION_NAME=1.0
+VERSION_CODE=11; VERSION_NAME=1.0.1
 mkdir -p "$TC" "$LOGD"
 PREBUILT=""
 if [ "${1:-}" = "--prebuilt" ]; then
@@ -28,7 +28,7 @@ case "$(uname -s)" in Darwin) PLAT=mac;; Linux) PLAT=linux;; MINGW*|MSYS*|CYGWIN
 if [ -z "$PREBUILT" ] && [ "$PLAT" != mac ] && [ "$PLAT" != linux ]; then
   echo "Building from source needs macOS or Linux (on Windows: use WSL/Ubuntu)."
   APKP=$(ls "$DIR"/apk/GlassHome-*.apk 2>/dev/null | head -1)
-  echo "To install the ready-made app instead:  bash scripts/05_build_and_install_home.sh --prebuilt ${APKP:-apk/GlassHome-1.0.apk}"
+  echo "To install the ready-made app instead:  bash scripts/05_build_and_install_home.sh --prebuilt ${APKP:-apk/GlassHome-1.0.1.apk}"
   exit 1
 fi
 if [ -z "$PREBUILT" ]; then

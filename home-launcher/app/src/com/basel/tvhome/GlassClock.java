@@ -181,11 +181,15 @@ final class GlassClock extends View {
         Rect db = new Rect(), ab = new Rect();
         digitP.getTextBounds("0123456789:", 0, 11, db);
         ampmP.getTextBounds("AMP", 0, 3, ab);
-        float hmW = digitP.measureText(hm), apW = ampmP.measureText(ap), gap = 8 * dp;
-        float side = gap + apW;                     // reserved on BOTH sides -> digits sit on the centre line
-        l.w = (int) Math.ceil(hmW + 2 * side) + 2 * pad;
+        float hmW = digitP.measureText(hm), gap = 8 * dp;
+        // Fixed canvas sized for the WIDEST time ("00:00" with tabular digits) and the wider of AM/PM,
+        // so the clock never needs re-measuring and can never be clipped (e.g. 9:59 -> 10:00, 12:42 AM).
+        float maxHmW = digitP.measureText("00:00");
+        float apMax = Math.max(ampmP.measureText("AM"), ampmP.measureText("PM"));
+        float side = gap + apMax;                   // reserved on BOTH sides -> digits sit on the centre line
+        l.w = (int) Math.ceil(maxHmW + 2 * side) + 2 * pad;
         l.h = (db.bottom - db.top) + 2 * pad;
-        l.hmX = pad + side;
+        l.hmX = (l.w - hmW) / 2f;                   // digits centred in the fixed canvas
         l.base = pad - db.top;                      // digit cap-top sits exactly at y = pad
         l.apX = l.hmX + hmW + gap;
         l.apBase = pad - ab.top;                    // AM/PM cap-top aligned with the digits' top
@@ -230,7 +234,7 @@ final class GlassClock extends View {
     }
 
     private void drawLayer(Canvas c, Layer l, float alpha) {
-        Bitmap bg = Glass.screenSharp;
+        Bitmap bg = Glass.screenFrost != null ? Glass.screenFrost : Glass.screenSharp; // frosted source = clean glass body
         float dx = (getWidth() - l.w) / 2f;
         c.save();
         c.translate(dx, 0);

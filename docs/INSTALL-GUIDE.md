@@ -131,7 +131,7 @@ HDMI-CEC, Widevine, Bluetooth and the network. If anything fails it undoes that 
 **Option A — ready-made app (recommended, macOS and Windows):**
 
 ```
-bash scripts/05_build_and_install_home.sh --prebuilt apk/GlassHome-1.0.apk
+bash scripts/05_build_and_install_home.sh --prebuilt apk/GlassHome-1.0.1.apk
 ```
 
 **Option B — build it yourself from the source (macOS, Linux, or WSL on Windows):**
