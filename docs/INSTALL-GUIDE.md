@@ -131,7 +131,7 @@ HDMI-CEC, Widevine, Bluetooth and the network. If anything fails it undoes that 
 **Option A — ready-made app (recommended, macOS and Windows):**
 
 ```
-bash scripts/05_build_and_install_home.sh --prebuilt apk/GlassHome-1.0.1.apk
+bash scripts/05_build_and_install_home.sh --prebuilt apk/GlassHome-1.0.2.apk
 ```
 
 **Option B — build it yourself from the source (macOS, Linux, or WSL on Windows):**
@@ -185,6 +185,7 @@ not appear. Hold OK on a card to remove it.
 | Script | What it does | Works on |
 |---|---|---|
 | `02_backup_and_benchmark.sh after` | Re-measures, so you can compare with the baseline | macOS, Windows |
+| `12_performance_boost.sh` | Pre-compiles your main apps for faster starts (measured before/after, auto-reverts anything slower) and offers safe background tidy-ups | macOS, Windows |
 | `06_check_continue.sh` | Shows what each app reports as "now playing" + a screenshot of the row | macOS, Windows |
 | `09_record_tour.sh` | Records a smooth tour of the home screen and masters it to 4K 60 fps | macOS, Windows |
 | `07_airplay_boost.sh` | Measures AirPlay mirroring and applies safe, reversible Wi-Fi tweaks | macOS |

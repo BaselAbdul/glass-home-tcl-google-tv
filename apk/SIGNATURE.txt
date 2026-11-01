@@ -1,7 +1,7 @@
-Glass Home 1.0.1 for TCL Google TV - signed by Basel Majid
+Glass Home 1.0.2 for TCL Google TV - signed by Basel Majid
 
 Signer #1 certificate DN: CN=Basel Majid, OU=Glass Home, O=Basel Majid
 Signer #1 certificate SHA-256 digest: 2402977819dbe531fb9bd86c355597cb216107b3f849f72b4bec30e5313d55ab
 
-SHA-256 of GlassHome-1.0.1.apk:
-a401b1ea01d42c12332b8fcdd4f37bc2d7d735c47996533bb19dbc0f6692ff96
+SHA-256 of GlassHome-1.0.2.apk:
+27c5aacfd5bc1e7d713105a0a3bc3bbff0976f6b8953db4cdee10f6a9696a365

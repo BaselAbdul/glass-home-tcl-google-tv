@@ -253,19 +253,13 @@ final class GlassTile extends FrameLayout {
         super.dispatchDraw(c);
         float w = getWidth(), h = getHeight();
         // soft top-left light inside the glass (always faint, brighter on focus)
-        c.save();
-        c.clipPath(clip);
         glint.setAlpha((int) (110 + 145 * focus));
-        c.drawRect(rf, glint);
-        c.restore();
+        c.drawRoundRect(rf, radius, radius, glint);      // shader-filled round rect: no clip/stencil pass
         // light sweep across the glass when focus lands
         if (sweep > -0.45f && sweep < 1.5f && sweepSh != null) {
-            c.save();
-            c.clipPath(clip);
             sweepM.setTranslate(sweep * (w + h) - h, 0);
             sweepSh.setLocalMatrix(sweepM);
-            c.drawRect(rf, sweepP);
-            c.restore();
+            c.drawRoundRect(rf, radius, radius, sweepP);
         }
         // chromatic dispersion on the rim (red / blue split), stronger while moving
         float o = dp * (0.35f + 0.7f * focus + chroma * 0.8f);

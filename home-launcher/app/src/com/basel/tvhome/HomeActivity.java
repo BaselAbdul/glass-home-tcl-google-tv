@@ -111,8 +111,14 @@ public class HomeActivity extends Activity {
     private static final Set<String> DEFAULT_HIDDEN_LABELS = new HashSet<>(Arrays.asList(
             "Safety Guard", "T-Solo", "TCL Channel", "TCL Home", "Gallery", "Media Player"));
 
+    private final TvInputManager.TvInputCallback inputCb = new TvInputManager.TvInputCallback() {
+        @Override public void onInputStateChanged(String id, int state) { refreshAsync(); }
+        @Override public void onInputAdded(String id) { refreshAsync(); }
+        @Override public void onInputRemoved(String id) { refreshAsync(); }
+    };
+
     private final BroadcastReceiver pkgReceiver = new BroadcastReceiver() {
-        @Override public void onReceive(Context c, Intent i) { refresh(false); loadContinue(); }
+        @Override public void onReceive(Context c, Intent i) { refreshAsync(); loadContinue(); }
     };
 
     // ================================================================ lifecycle
@@ -129,6 +135,7 @@ public class HomeActivity extends Activity {
             prefs.edit().putStringSet("hidden", h).putBoolean("v3init", true).apply();
         }
         setContentView(buildUi());
+        getWindow().setBackgroundDrawable(null);   // the backdrop paints every pixel: skip a full-screen fill per frame
 
         IntentFilter f = new IntentFilter();
         f.addAction(Intent.ACTION_PACKAGE_ADDED);
@@ -136,12 +143,13 @@ public class HomeActivity extends Activity {
         f.addAction(Intent.ACTION_PACKAGE_CHANGED);
         f.addDataScheme("package");
         registerReceiver(pkgReceiver, f, Context.RECEIVER_EXPORTED);
+        if (tim != null) tim.registerCallback(inputCb, Images.MAIN);
         refresh(true);
     }
 
     @Override protected void onResume() {
         super.onResume();
-        refresh(false);
+        refreshAsync();   // off the main thread: Home appears instantly, updates only if apps/inputs changed
         loadContinue();
     }
 
@@ -184,6 +192,7 @@ public class HomeActivity extends Activity {
 
     @Override protected void onDestroy() {
         try { unregisterReceiver(pkgReceiver); } catch (Exception ignored) { }
+        try { if (tim != null) tim.unregisterCallback(inputCb); } catch (Exception ignored) { }
         super.onDestroy();
     }
 
@@ -849,6 +858,32 @@ public class HomeActivity extends Activity {
 
     private void refresh(boolean initialFocus) {
         collect();
+        applyItems(initialFocus);
+    }
+
+    private volatile boolean refreshing;
+
+    /** Rebuilds the item list on a background thread; re-renders only if something changed. */
+    private void refreshAsync() {
+        if (refreshing) return;
+        refreshing = true;
+        Images.POOL.execute(new Runnable() {
+            @Override public void run() {
+                final Map<String, Item> m = buildItems();
+                Images.MAIN.post(new Runnable() {
+                    @Override public void run() {
+                        refreshing = false;
+                        if (isFinishing() || isDestroyed()) return;
+                        items.clear();
+                        items.putAll(m);
+                        applyItems(false);
+                    }
+                });
+            }
+        });
+    }
+
+    private void applyItems(boolean initialFocus) {
         if (!prefs.getBoolean("v4init", false)) {
             Set<String> h = new HashSet<>(prefs.getStringSet("hidden", Collections.<String>emptySet()));
             for (Item it : items.values()) if (DEFAULT_HIDDEN_LABELS.contains(it.label)) h.add(it.key);
@@ -920,8 +955,16 @@ public class HomeActivity extends Activity {
         }
     }
 
+    /** Synchronous refresh of the item map (first frame only). */
     private void collect() {
+        Map<String, Item> m = buildItems();
         items.clear();
+        items.putAll(m);
+    }
+
+    /** Builds apps/inputs/settings items. Safe to call on a background thread. */
+    private Map<String, Item> buildItems() {
+        Map<String, Item> items = new LinkedHashMap<>();
         Item s = new Item();
         s.key = "settings";
         s.label = "Settings";
@@ -984,6 +1027,7 @@ public class HomeActivity extends Activity {
             @Override public int compare(Item a, Item b) { return a.label.compareToIgnoreCase(b.label); }
         });
         for (Item it : apps) items.put(it.key, it);
+        return items;
     }
 
     private String appLabel(String pkg) {
@@ -1143,7 +1187,7 @@ public class HomeActivity extends Activity {
                                 return;
                         }
                         signature = "";
-                        refresh(false);
+                        applyItems(false);
                         View v = getWindow().getDecorView().findViewWithTag(it.key);
                         if (v != null) v.requestFocus(); else focusFirst();
                     }
